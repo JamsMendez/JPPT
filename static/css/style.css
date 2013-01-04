@@ -3,8 +3,20 @@
 	padding: 0px;
 }
 
+a{
+	color: #FFF;
+	margin: 10px;
+	text-decoration: none;
+}
+
 body{
 	background-color: #0099FF;
+}
+
+footer{
+	background-color: #000;
+	font-size: 1em;
+	font-weight: bold;
 }
 
 h3{
@@ -135,4 +147,26 @@ span{
 
 #yourchallenging{
 	color: #FF0000;
+}
+
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+	.btn img{
+		height: 15px;
+		width: 15px;
+	}
+
+	.content-weapon{
+		height: 110px;
+		width: 110px;
+	}
+
+	.weapon{
+		height: 65px;
+		width: 65px;	
+	}
+
+	#indication{
+		font-size: 1.2em;
+	}
 }
