@@ -98,6 +98,17 @@ function init (){
 			}
 		}
 	});
+	
+	websocket.on('warn-adversary', function (user){
+		if(nameuser == user){
+			var adversary = $('#yourchallenging').text();
+			if(adversary != ''){
+				$('#yourchallenging').text('');
+				websocket.emit('delete-adversary', nameuser);
+				alert(adversary + " decidio terminar el Duelo");
+			}
+		}
+	});
 
 	websocket.on('adversary-disconnect', function (user_disconnect){
 		var adver = $('#yourchallenging').text();
@@ -159,6 +170,14 @@ function init (){
 
 	$('#notification').on('click', function (){
 		$(this).text('');
+	});
+	
+	$('#close').on('click', function (){
+		var adversary = $('#yourchallenging').text();
+		if(adversary != ''){
+			$('#yourchallenging').text('');
+			websocket.emit('remove-adversary', nameuser);
+		}
 	});
 
 }
