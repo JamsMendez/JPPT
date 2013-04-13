@@ -8,11 +8,12 @@ var weapons = ['stone', 'scissors', 'role'],
 var turno = 0;
 
 //Empate
-//Que cada usuario no pueda tirar dos veces
 
 function init (){
 
 	var websocket = io.connect('/');
+
+	$('#close').hide();
 
 	websocket.on('error-nameuser', function (){
 		$('#notification').text('El usuario ya existe');
@@ -50,6 +51,10 @@ function init (){
 				//QUitar el Modo Robot	
 				$('#robot').removeAttr('checked');
 				$('#robot').hide();
+
+				//Ocultar formulario y mostrar boton finish
+				$('#form-adversary').hide();
+				$('#close').show();
 			}else{
 				websocket.emit('respond', nameuser, user, 'no');
 			}
@@ -66,6 +71,10 @@ function init (){
 				//Quitar el Modo Robot
 				$('#robot').removeAttr('checked');
 				$('#robot').hide();
+
+				//Ocultar formulario
+				$('#form-adversary').hide();
+				$('#close').show();
 			}else{
 				alert(user + " dice que no :(");
 			}
@@ -80,11 +89,19 @@ function init (){
 			if(turno == 2){
 				$('#p2 img').attr('src', '/img/'+ hisweapon +'.png');
 				$.timer(1000, function (timer) {
-					if(isWinner(youweapon, hisweapon)){
-						alert("Ganaste!!!");
+					
+					var value = isWinner(youweapon, hisweapon);
+
+					if(typeof(value) != "number"){
+						if(value){
+							alert("Ganaste! :D");
+						}else{
+							alert("Perdiste :(");
+						}
 					}else{
-						alert("Perdiste!!!");
+						alert("Empate :P");
 					}
+
 					turno = 0;
 					$('div>img').attr('src','/img/none.png');
 					$('#p1 img').attr('alt','Arma de Player 1');
@@ -106,6 +123,10 @@ function init (){
         $('#yourchallenging').text('');
         websocket.emit('delete-adversary', nameuser);
         alert(adversary + " decidio terminar el Duelo");
+
+        //Mostrar formulario
+				$('#form-adversary').show();
+				$('#close').hide();
       }
     }
   });
@@ -119,16 +140,22 @@ function init (){
 
 			//Mostrar el Modo Robot
 			$('#robot').show();
+
+			//Mostrar formulario
+			$('#form-adversary').show();
+			$('#close').hide();
 		}
 	});
 
 	$('#btn-user').on('click', function (){
 		if(nameuser == undefined){
-			var name = $('#user').val();
-			websocket.emit('add-user', name);
-			//Vaciar
-			$('#notification').text('');
-			$('#user').val('');
+			var name = $('#user').val().replace(' ', '');
+			if(name != ''){
+				websocket.emit('add-user', name);
+				//Vaciar
+				$('#notification').text('');
+				$('#user').val('');
+			}
 		}else{
 			$('#notification').text('Tu Usuario es: ' + nameuser);
 		}
@@ -177,6 +204,9 @@ function init (){
     if(adversary != ''){
       $('#yourchallenging').text('');
       websocket.emit('remove-adversary', nameuser);
+      //Mostrar formulario y ocultar boton finish
+			$('#form-adversary').show();
+			$('#close').hide();
     }
   });
 
@@ -191,11 +221,19 @@ function getWinner(weapon){
 		if(turno == 2 && hisweapon !== undefined){
 			$('#p2 img').attr('src', '/img/'+ hisweapon +'.png');
 			$.timer(1000, function (timer) {
-				if(isWinner(youweapon, hisweapon)){
-					alert("Ganaste!!!");
+
+				var value = isWinner(youweapon, hisweapon);
+
+				if(typeof(value) != "number"){
+					if(value){
+						alert("Ganaste! :D");
+					}else{
+						alert("Perdiste :(");
+					}
 				}else{
-					alert("Perdiste!!!");
+					alert("Empate :P");
 				}
+
 				turno = 0;
 				$('div>img').attr('src','/img/none.png');
 				$('#p1 img').attr('alt','Arma de Player 1');
@@ -211,11 +249,18 @@ function getWinner(weapon){
 		var num = number();
 		showBattle(num);
 		$.timer(1000, function (timer) {
-			if(isWinner(weapon, weapons[num])){
-				alert("Ganaste!!!");
+
+			var value = isWinner(weapon, weapons[num]);
+			if(typeof(value) != "number"){
+				if(value){
+					alert("Ganaste! :D");
+				}else{
+					alert("Perdiste :(");
+				}
 			}else{
-				alert("Perdiste!!!");
+				alert("Empate :P");
 			}
+
 			$('div>img').attr('src','/img/none.png');
 			$('#p1 img').attr('alt','Arma de Player 1');
 			$('#p2 img').attr('alt','Arma de Player 2');
@@ -228,14 +273,18 @@ function getWinner(weapon){
 
 
 function isWinner (p1, p2){
-	if(p1 == 'stone' && p2 == 'scissors'){
-		return true;
-	}else if(p1 == 'scissors' && p2 == 'role'){
-		return true;
-	}else if(p1 == 'role' && p2 == 'stone'){
-		return true;
+	if(p1 != p2){
+		if(p1 == 'stone' && p2 == 'scissors'){
+			return true;
+		}else if(p1 == 'scissors' && p2 == 'role'){
+			return true;
+		}else if(p1 == 'role' && p2 == 'stone'){
+			return true;
+		}else{
+			return false;
+		}
 	}else{
-		return false;
+		return 0;
 	}
 }
 
