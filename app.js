@@ -23,6 +23,9 @@ app.get('/', route.home);
 require('./socket/socket')(sockets);
 
 /*
+
+#Saber los metodos de un Object
+
 function inspeccionar(obj)
 {
   var msg = '';

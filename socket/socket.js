@@ -63,19 +63,6 @@ module.exports = function(io) {
 			if(this.name_user == user){
 				this.adversary = 'none';
 			}
-		});
-		
-		socket.on('remove-adversary', function (user){
-			if(this.name_user == user){
-
-				this.broadcast.emit('warn-adversary', this.adversary);
-
-				this.adversary = 'none';
-			}
-		});
-
-		socket.on('forceDisconnect', function (){
-			this.disconnect();
 		});		
 
 		socket.on('disconnect', function () {
