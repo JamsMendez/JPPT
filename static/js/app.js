@@ -7,13 +7,12 @@ var weapons = ['stone', 'scissors', 'role'],
 
 var turno = 0;
 
-//Empate
-
 function init (){
 
-	var websocket = io.connect('/');
-
+	$('#btn-logout').hide();
 	$('#close').hide();
+
+	var websocket = io.connect('/');
 
 	websocket.on('error-nameuser', function (){
 		$('#notification').text('El usuario ya existe');
@@ -155,6 +154,10 @@ function init (){
 				//Vaciar
 				$('#notification').text('');
 				$('#user').val('');
+
+				$('#btn-logout').show();		
+				$('#user').hide();
+				$('#btn-user').hide();
 			}
 		}else{
 			$('#notification').text('Tu Usuario es: ' + nameuser);
@@ -208,6 +211,14 @@ function init (){
 			$('#form-adversary').show();
 			$('#close').hide();
     }
+  });
+
+  $('#btn-logout').on('click', function (){
+
+  	websocket.emit('forceDisconnect');
+
+  	location.reload();
+
   });
 
 }
